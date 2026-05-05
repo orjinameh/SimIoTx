@@ -213,7 +213,7 @@ export default function Home() {
       }}>
         <div style={{ fontSize: 11, letterSpacing: 3, color: '#00FF88', marginBottom: 16 }}>PRICING</div>
         <h2 style={{ fontSize: 36, fontWeight: 800, marginBottom: 48, color: '#F8FAFC' }}>
-          Pay with crypto. No card needed.
+          Finally, a dev tool you can actually pay for — no US card required. Built for developers everywhere.
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
           {[
