@@ -1,0 +1,278 @@
+'use client';
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
+
+const DEMO_LOGS = [
+  '{"deviceId":"esp32-001","heartRate":87,"spo2":97,"temperature":37.1,"timestamp":"2024-01-15T10:23:41Z"}',
+  '{"deviceId":"esp32-001","heartRate":89,"spo2":96,"temperature":37.2,"timestamp":"2024-01-15T10:23:43Z"}',
+  '{"deviceId":"sensor-weather-01","temperature":28.4,"humidity":71,"pressure":1013,"timestamp":"2024-01-15T10:23:45Z"}',
+  '{"deviceId":"esp32-001","heartRate":91,"spo2":95,"temperature":37.3,"timestamp":"2024-01-15T10:23:47Z"}',
+  '{"deviceId":"gps-tracker-03","latitude":6.524,"longitude":3.379,"speed":0,"altitude":28,"timestamp":"2024-01-15T10:23:49Z"}',
+  '{"deviceId":"esp32-001","heartRate":88,"spo2":97,"temperature":37.1,"timestamp":"2024-01-15T10:23:51Z"}',
+];
+
+export default function Home() {
+  const [logs, setLogs] = useState<string[]>([]);
+  const [idx, setIdx] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      setLogs(prev => [...prev.slice(-8), DEMO_LOGS[idx % DEMO_LOGS.length]]);
+      setIdx(i => i + 1);
+    }, 1800);
+    return () => clearInterval(t);
+  }, [idx]);
+
+  return (
+    <div style={{
+      minHeight: '100vh', background: '#080C10',
+      fontFamily: '"JetBrains Mono", "Fira Code", monospace',
+      color: '#E2E8F0', overflowX: 'hidden',
+    }}>
+
+      {/* Grid background */}
+      <div style={{
+        position: 'fixed', inset: 0, zIndex: 0,
+        backgroundImage: `linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px)`,
+        backgroundSize: '40px 40px',
+      }} />
+
+      {/* Nav */}
+      <nav style={{
+        position: 'relative', zIndex: 10,
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        padding: '20px 48px',
+        borderBottom: '1px solid rgba(0,255,136,0.1)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{
+            width: 8, height: 8, borderRadius: '50%',
+            background: '#00FF88', boxShadow: '0 0 12px #00FF88',
+            animation: 'pulse 2s infinite',
+          }} />
+          <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: 2, color: '#00FF88' }}>
+            SIMIOTX
+          </span>
+        </div>
+        <div style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
+          <Link href="#pricing" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: 13, letterSpacing: 1 }}>PRICING</Link>
+          <Link href="/auth/login" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: 13, letterSpacing: 1 }}>LOGIN</Link>
+          <Link href="/auth/register" style={{
+            background: 'transparent', border: '1px solid #00FF88',
+            color: '#00FF88', padding: '8px 20px', fontSize: 13,
+            letterSpacing: 1, textDecoration: 'none',
+            transition: 'all 0.2s',
+          }}>GET STARTED →</Link>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <div style={{
+        position: 'relative', zIndex: 10,
+        maxWidth: 1100, margin: '0 auto', padding: '80px 48px 60px',
+      }}>
+        <div style={{
+          display: 'inline-block', border: '1px solid rgba(0,255,136,0.3)',
+          padding: '4px 14px', fontSize: 11, letterSpacing: 3,
+          color: '#00FF88', marginBottom: 32,
+        }}>
+          IoT DEVICE SIMULATOR — CLOUD BASED
+        </div>
+
+        <h1 style={{
+          fontSize: 'clamp(36px, 6vw, 72px)', fontWeight: 800,
+          lineHeight: 1.05, letterSpacing: -2, marginBottom: 24,
+          color: '#F8FAFC',
+        }}>
+          Test your IoT pipeline<br />
+          <span style={{ color: '#00FF88' }}>without hardware.</span>
+        </h1>
+
+        <p style={{
+          fontSize: 18, color: '#94A3B8', lineHeight: 1.7,
+          maxWidth: 560, marginBottom: 48,
+        }}>
+          Virtual ESP32 simulators that send realistic sensor data to your MQTT broker or HTTP endpoint.
+          No physical device needed. Start testing in 60 seconds.
+        </p>
+
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+          <Link href="/auth/register" style={{
+            background: '#00FF88', color: '#080C10',
+            padding: '14px 32px', fontWeight: 800,
+            fontSize: 14, letterSpacing: 2,
+            textDecoration: 'none', transition: 'all 0.2s',
+          }}>
+            START FREE →
+          </Link>
+          <Link href="#how" style={{
+            border: '1px solid rgba(255,255,255,0.15)',
+            color: '#94A3B8', padding: '14px 32px',
+            fontSize: 14, letterSpacing: 2,
+            textDecoration: 'none',
+          }}>
+            SEE HOW IT WORKS
+          </Link>
+        </div>
+
+        {/* Stats */}
+        <div style={{ display: 'flex', gap: 48, marginTop: 64, paddingTop: 48, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          {[['60s', 'Setup time'], ['MQTT + HTTP', 'Protocols'], ['10+', 'Sensor types'], ['Free', 'To start']].map(([val, lbl]) => (
+            <div key={lbl}>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#00FF88' }}>{val}</div>
+              <div style={{ fontSize: 12, color: '#64748B', letterSpacing: 1, marginTop: 4 }}>{lbl}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Live Demo Terminal */}
+      <div style={{
+        position: 'relative', zIndex: 10,
+        maxWidth: 1100, margin: '0 auto', padding: '0 48px 80px',
+      }}>
+        <div style={{
+          background: '#0D1117', border: '1px solid rgba(0,255,136,0.15)',
+          borderRadius: 4, overflow: 'hidden',
+        }}>
+          {/* Terminal bar */}
+          <div style={{
+            background: '#161B22', padding: '12px 20px',
+            display: 'flex', alignItems: 'center', gap: 8,
+            borderBottom: '1px solid rgba(0,255,136,0.1)',
+          }}>
+            {['#FF5F57','#FEBC2E','#28C840'].map(c => (
+              <div key={c} style={{ width: 12, height: 12, borderRadius: '50%', background: c }} />
+            ))}
+            <span style={{ fontSize: 12, color: '#64748B', marginLeft: 12, letterSpacing: 1 }}>
+              LIVE SIMULATOR OUTPUT — 3 VIRTUAL DEVICES RUNNING
+            </span>
+            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#00FF88', boxShadow: '0 0 8px #00FF88' }} />
+              <span style={{ fontSize: 11, color: '#00FF88' }}>LIVE</span>
+            </div>
+          </div>
+          {/* Logs */}
+          <div style={{ padding: '20px', minHeight: 240, fontFamily: 'monospace', fontSize: 12 }}>
+            {logs.map((log, i) => (
+              <div key={i} style={{
+                padding: '4px 0', borderBottom: '1px solid rgba(255,255,255,0.03)',
+                animation: 'fadeIn 0.3s ease',
+                opacity: 1 - (logs.length - 1 - i) * 0.1,
+              }}>
+                <span style={{ color: '#00FF88' }}>→ </span>
+                <span style={{ color: '#94A3B8' }}>{log}</span>
+              </div>
+            ))}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12 }}>
+              <span style={{ color: '#00FF88' }}>$</span>
+              <div style={{
+                width: 8, height: 16, background: '#00FF88',
+                animation: 'blink 1s infinite',
+              }} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Features */}
+      <div id="how" style={{
+        position: 'relative', zIndex: 10,
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+        padding: '80px 48px', maxWidth: 1100, margin: '0 auto',
+      }}>
+        <div style={{ fontSize: 11, letterSpacing: 3, color: '#00FF88', marginBottom: 16 }}>HOW IT WORKS</div>
+        <h2 style={{ fontSize: 36, fontWeight: 800, marginBottom: 48, color: '#F8FAFC' }}>
+          From zero to streaming in 3 steps
+        </h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 32 }}>
+          {[
+            { step: '01', title: 'Connect your broker', desc: 'Paste your MQTT broker URL or HTTP endpoint. Supports HiveMQ, AWS IoT, EMQX, any broker.' },
+            { step: '02', title: 'Configure your sensors', desc: 'Choose from presets (medical, weather, GPS, industrial) or build custom sensors with any range and drift behavior.' },
+            { step: '03', title: 'Start simulating', desc: 'Hit start. Your virtual device sends realistic, drifting sensor data to your system every few seconds.' },
+          ].map(({ step, title, desc }) => (
+            <div key={step} style={{
+              border: '1px solid rgba(255,255,255,0.08)',
+              padding: 32, position: 'relative',
+            }}>
+              <div style={{ fontSize: 48, fontWeight: 900, color: 'rgba(0,255,136,0.1)', position: 'absolute', top: 16, right: 24 }}>{step}</div>
+              <div style={{ fontSize: 11, color: '#00FF88', letterSpacing: 2, marginBottom: 12 }}>STEP {step}</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#F8FAFC', marginBottom: 12 }}>{title}</div>
+              <div style={{ fontSize: 14, color: '#64748B', lineHeight: 1.6 }}>{desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Pricing */}
+      <div id="pricing" style={{
+        position: 'relative', zIndex: 10,
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+        padding: '80px 48px', maxWidth: 1100, margin: '0 auto',
+      }}>
+        <div style={{ fontSize: 11, letterSpacing: 3, color: '#00FF88', marginBottom: 16 }}>PRICING</div>
+        <h2 style={{ fontSize: 36, fontWeight: 800, marginBottom: 48, color: '#F8FAFC' }}>
+          Pay with crypto. No card needed.
+        </h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
+          {[
+            { plan: 'FREE', price: '$0', period: 'forever', features: ['1 virtual device', '100 messages/day', 'MQTT + HTTP', 'Community support'], cta: 'Start free', highlight: false },
+            { plan: 'PRO', price: '$10', period: '/month in crypto', features: ['Unlimited devices', 'Unlimited messages', 'All sensor presets', 'Priority support', 'API access'], cta: 'Upgrade with crypto', highlight: true },
+            { plan: 'TEAM', price: '$29', period: '/month in crypto', features: ['Everything in Pro', 'Team members', 'Custom sensor builder', 'Webhook notifications', 'SLA'], cta: 'Upgrade with crypto', highlight: false },
+          ].map(({ plan, price, period, features, cta, highlight }) => (
+            <div key={plan} style={{
+              border: `1px solid ${highlight ? '#00FF88' : 'rgba(255,255,255,0.08)'}`,
+              padding: 32, position: 'relative',
+              background: highlight ? 'rgba(0,255,136,0.03)' : 'transparent',
+            }}>
+              {highlight && (
+                <div style={{
+                  position: 'absolute', top: -1, left: '50%', transform: 'translateX(-50%)',
+                  background: '#00FF88', color: '#080C10', fontSize: 10,
+                  fontWeight: 800, padding: '2px 12px', letterSpacing: 2,
+                }}>MOST POPULAR</div>
+              )}
+              <div style={{ fontSize: 12, letterSpacing: 3, color: highlight ? '#00FF88' : '#64748B', marginBottom: 16 }}>{plan}</div>
+              <div style={{ fontSize: 40, fontWeight: 900, color: '#F8FAFC', marginBottom: 4 }}>{price}</div>
+              <div style={{ fontSize: 12, color: '#64748B', marginBottom: 32 }}>{period}</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32 }}>
+                {features.map(f => (
+                  <div key={f} style={{ display: 'flex', gap: 10, fontSize: 13, color: '#94A3B8' }}>
+                    <span style={{ color: '#00FF88' }}>✓</span> {f}
+                  </div>
+                ))}
+              </div>
+              <Link href="/auth/register" style={{
+                display: 'block', textAlign: 'center',
+                background: highlight ? '#00FF88' : 'transparent',
+                border: `1px solid ${highlight ? '#00FF88' : 'rgba(255,255,255,0.15)'}`,
+                color: highlight ? '#080C10' : '#94A3B8',
+                padding: '12px', fontSize: 12, letterSpacing: 2,
+                textDecoration: 'none', fontWeight: highlight ? 800 : 400,
+              }}>{cta}</Link>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div style={{
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+        padding: '32px 48px', textAlign: 'center',
+        color: '#334155', fontSize: 12, letterSpacing: 1,
+        position: 'relative', zIndex: 10,
+      }}>
+        SIMIOTX © 2024 — VIRTUAL IoT DEVICE SIMULATOR
+      </div>
+
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+      `}</style>
+    </div>
+  );
+}
