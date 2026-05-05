@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from '../auth/options';
 import { connectDB, Device, User } from '@/lib/db';
-import { v4 as uuid } from 'uuid';
+import { randomUUID } from 'crypto';
 
 // GET all devices for current user
 export async function GET(req: NextRequest) {
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
   const device = await Device.create({
     ...body,
     userId: session.user.id,
-    deviceId: uuid(),
+    deviceId: randomUUID(),
     isRunning: false,
   });
 

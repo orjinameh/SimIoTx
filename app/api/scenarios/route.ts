@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from '../auth/options';
 import { connectDB, Scenario, Device } from '@/lib/db';
 import { startSimulator, stopSimulator, isRunning } from '@/lib/simulator';
 

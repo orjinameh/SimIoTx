@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from '../auth/options';
 import { connectDB, Device, ShareLink, User } from '@/lib/db';
-import { v4 as uuid } from 'uuid';
+import { randomUUID } from 'crypto';
 
 // POST generate a share link for a device
 export async function POST(req: NextRequest) {
@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   const device = await Device.findOne({ deviceId, userId: session.user.id }).lean();
   if (!device) return NextResponse.json({ error: 'Device not found' }, { status: 404 });
 
-  const token = uuid().replace(/-/g, '').slice(0, 16);
+  const token = randomUUID().replace(/-/g, '').slice(0, 16);
   const expiresAt = new Date(Date.now() + expiresInHours * 60 * 60 * 1000);
 
   const link = await ShareLink.create({
